@@ -1,0 +1,62 @@
+---
+import '../styles/global.css';
+export interface Props {
+  title: string;
+  description?: string;
+  lang?: string;
+}
+const { title, description = 'BRIDGE — Nền tảng AI cho doanh nghiệp Việt Nam', lang = 'vi' } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang={lang}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:site_name" content="SmartAI — BRIDGE" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;padding-block:1rem;">
+      <a href="/" style="display:flex;align-items:center;gap:0.5rem;font-weight:800;font-size:1.2rem;font-family:'Outfit',sans-serif;">
+        <span style="color:var(--color-accent);">⚡</span>
+        <span>SmartAI</span>
+      </a>
+      <nav style="display:flex;gap:1.5rem;align-items:center;">
+        <a href="/compass/">Compass</a>
+        <a href="/#products">Sản phẩm</a>
+        <a href="/en/" class="btn btn-secondary" style="padding:0.4rem 1rem;font-size:0.8rem;">🇬🇧 EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main style="position:relative;z-index:1;">
+    <slot />
+  </main>
+
+  <!-- Footer -->
+  <footer style="position:relative;z-index:1;">
+    <div class="container" style="padding-block:2rem;text-align:center;">
+      <p style="margin-bottom:0.5rem;">
+        © 2026 BRIDGE Methods ·
+        <a href="/compass/">Compass</a> ·
+        <a href="https://bridgemethods.com">bridgemethods.com</a>
+      </p>
+      <p style="font-size:0.75rem;color:var(--color-text-muted);margin:0;">
+        Dữ liệu của bạn chỉ được dùng để chuẩn bị đề xuất BRIDGE. Chúng tôi không chia sẻ với bên thứ ba.
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

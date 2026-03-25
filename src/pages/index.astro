@@ -1,0 +1,157 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const tools = [
+  { href: '/compass/quick/',      icon: '🧭', name: 'Compass Nhanh',     desc: '60 giây — tìm AI phù hợp' },
+  { href: '/compass/roi/',        icon: '📈', name: 'Tính ROI',           desc: 'Xem tiết kiệm bao nhiêu' },
+  { href: '/compass/readiness/',  icon: '🎯', name: 'Đánh Giá Sẵn Sàng', desc: 'Đo mức sẵn sàng AI' },
+  { href: '/compass/navigation/', icon: '🗺️', name: 'Bản Đồ AI',          desc: 'Xem lộ trình của bạn' },
+  { href: '/compass/matcher/',    icon: '🔍', name: 'Tìm Tool AI',        desc: 'Match tool với nhu cầu' },
+  { href: '/compass/calculator/', icon: '🧮', name: 'Máy Tính Chi Phí',  desc: 'Tính ngân sách AI' },
+  { href: '/compass/automator/',  icon: '⚡', name: 'Tự Động Hóa',       desc: 'Tìm quy trình cần tự động' },
+  { href: '/compass/report/',     icon: '📊', name: 'Báo Cáo AI',        desc: 'Tổng hợp kết quả của bạn' },
+];
+
+const products = [
+  { icon: '✍️', name: 'ContentBridge', desc: 'Bộ kỹ năng AI tạo nội dung. 25 biến thể cho Creator, Affiliate, Email, Agency, Business.', price: 'Từ $19/tháng', status: 'Đã Ra Mắt', live: true },
+  { icon: '🎬', name: 'CreatorStudio', desc: 'Pipeline sản xuất video AI. Kịch bản, thumbnail, SEO, phân phối đa kênh.', price: 'Sắp ra mắt', status: 'Đang Phát Triển', live: false },
+  { icon: '📄', name: 'DocBridge',     desc: 'Xử lý tài liệu doanh nghiệp bằng AI. Hợp đồng, báo cáo, đề xuất.', price: 'Sắp ra mắt', status: 'Đang Phát Triển', live: false },
+];
+
+const whys = [
+  { icon: '🏗️', title: 'Cấu Trúc, Không Phải Prompt', desc: 'Hệ thống AI bền vững được xây từ kiến trúc, không phải từ prompt dài.' },
+  { icon: '🎯', title: 'Đo Lường Trước Khi Mua',      desc: 'Compass miễn phí giúp bạn hiểu rõ nhu cầu trước khi đầu tư.' },
+  { icon: '💰', title: 'Kiểm Soát Chi Phí',            desc: 'Thiết kế cho ngân sách $100–400/tháng. Không phí ẩn.' },
+  { icon: '🔒', title: 'Dữ Liệu Của Bạn',             desc: 'Dùng API key của bạn. Dữ liệu không qua server trung gian.' },
+];
+---
+<BaseLayout title="BRIDGE — Khiến AI Làm Việc Cho Bạn" description="Từ công cụ đánh giá miễn phí đến giải pháp AI cao cấp — BRIDGE giúp doanh nghiệp tận dụng AI đúng cách, đúng lúc, đúng ngân sách.">
+
+  <!-- Hero -->
+  <section style="padding:5rem 0 3rem;text-align:center;">
+    <div class="container">
+      <div class="badge" style="margin-bottom:1.5rem;">⚡ Nền Tảng AI Cho Doanh Nghiệp</div>
+      <h1 style="margin-bottom:1rem;">
+        Khiến AI <span class="gradient-text">Làm Việc Cho Bạn</span>
+      </h1>
+      <p style="font-size:1.125rem;max-width:600px;margin-inline:auto;margin-bottom:2rem;line-height:1.75;">
+        Từ công cụ đánh giá miễn phí đến giải pháp AI cao cấp — BRIDGE giúp doanh nghiệp tận dụng AI đúng cách, đúng lúc, đúng ngân sách.
+      </p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="/compass/" class="btn btn-primary">🧭 Khám Phá Compass Miễn Phí</a>
+        <a href="#products" class="btn btn-secondary">Tìm Hiểu Thêm →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section style="padding:2rem 0 3rem;">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;max-width:700px;margin-inline:auto;">
+        <div class="card" style="text-align:center;">
+          <div class="stat-value" style="color:var(--color-accent-green);">8+</div>
+          <div style="font-size:0.8125rem;color:var(--color-text-muted);margin-top:0.25rem;">Công Cụ Miễn Phí</div>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div class="stat-value" style="color:var(--color-accent-2);">25+</div>
+          <div style="font-size:0.8125rem;color:var(--color-text-muted);margin-top:0.25rem;">AI Skills</div>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div class="stat-value" style="color:var(--color-accent);">10–15h</div>
+          <div style="font-size:0.8125rem;color:var(--color-text-muted);margin-top:0.25rem;">Tiết Kiệm / Tuần</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Compass Tools -->
+  <section style="padding:3.5rem 0;">
+    <div class="container">
+      <h2 style="text-align:center;margin-bottom:0.5rem;">Công Cụ Compass Miễn Phí</h2>
+      <p style="text-align:center;font-size:0.9375rem;max-width:480px;margin-inline:auto;margin-bottom:2.5rem;">
+        Bộ công cụ đánh giá AI giúp bạn hiểu vị trí hiện tại, tiềm năng tiết kiệm, và sản phẩm phù hợp nhất.
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;max-width:900px;margin-inline:auto;">
+        {tools.map(t => (
+          <a href={t.href} class="card card-link" style="text-align:center;">
+            <div class="tool-icon">{t.icon}</div>
+            <div class="tool-name">{t.name}</div>
+            <div class="tool-desc">{t.desc}</div>
+          </a>
+        ))}
+      </div>
+      <div style="text-align:center;margin-top:1.5rem;">
+        <a href="/compass/" style="color:var(--color-accent);font-weight:600;font-size:0.9rem;">Xem Tất Cả Công Cụ →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Products -->
+  <section id="products" style="padding:3.5rem 0;">
+    <div class="container">
+      <h2 style="text-align:center;margin-bottom:0.5rem;">Sản Phẩm BRIDGE</h2>
+      <p style="text-align:center;font-size:0.9375rem;max-width:480px;margin-inline:auto;margin-bottom:2.5rem;">
+        Mỗi sản phẩm được thiết kế cho một nhu cầu cụ thể — từ tạo nội dung đến xử lý tài liệu.
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;max-width:900px;margin-inline:auto;">
+        {products.map(p => (
+          <div class="card" style="display:flex;flex-direction:column;">
+            <div style="font-size:1.75rem;margin-bottom:0.75rem;">{p.icon}</div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:0.5rem;">{p.name}</div>
+            <div style="font-size:0.875rem;color:var(--color-text-muted);flex:1;margin-bottom:1rem;">{p.desc}</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.8125rem;">
+              <span style="color:var(--color-text-muted);">{p.price}</span>
+              <span class={p.live ? 'status-live' : 'status-coming'} style="font-weight:600;">
+                {p.live ? '🟢' : '🟡'} {p.status}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Why BRIDGE -->
+  <section style="padding:3.5rem 0;">
+    <div class="container">
+      <h2 style="text-align:center;margin-bottom:2.5rem;">Tại Sao Chọn BRIDGE?</h2>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem;max-width:800px;margin-inline:auto;">
+        {whys.map(w => (
+          <div class="card">
+            <div style="font-size:1.5rem;margin-bottom:0.5rem;">{w.icon}</div>
+            <div style="font-weight:700;margin-bottom:0.375rem;">{w.title}</div>
+            <div style="font-size:0.875rem;color:var(--color-text-muted);">{w.desc}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CTA -->
+  <section style="padding:4rem 0 5rem;">
+    <div class="container" style="text-align:center;max-width:580px;">
+      <div class="card" style="padding:3rem;background:linear-gradient(145deg,rgba(245,158,11,0.08),rgba(129,140,248,0.05));">
+        <h2 style="margin-bottom:0.75rem;">Bắt Đầu Từ Đâu?</h2>
+        <p style="margin-bottom:2rem;">Dùng Compass miễn phí để khám phá AI phù hợp với bạn — chỉ 60 giây.</p>
+        <a href="/compass/quick/" class="btn btn-primary">🧭 Bắt Đầu Ngay</a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style is:global>
+  @media (max-width: 640px) {
+    [style*="grid-template-columns:repeat(4"] { grid-template-columns: repeat(2,1fr) !important; }
+    [style*="grid-template-columns:repeat(3"] { grid-template-columns: 1fr !important; }
+    [style*="grid-template-columns:repeat(2"] { grid-template-columns: 1fr !important; }
+  }
+</style>

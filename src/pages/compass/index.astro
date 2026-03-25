@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const tools = [
+  { href: '/compass/quick/',      icon: '🧭', name: 'Compass Nhanh',     desc: '60 giây, tìm AI phù hợp',          time: '60 giây' },
+  { href: '/compass/roi/',        icon: '📈', name: 'Tính ROI',           desc: 'Ước tính tiết kiệm thực tế',       time: '2 phút' },
+  { href: '/compass/readiness/',  icon: '🎯', name: 'Đánh Giá Sẵn Sàng', desc: 'Đo mức sẵn sàng AI của bạn',     time: '3 phút' },
+  { href: '/compass/navigation/', icon: '🗺️', name: 'Bản Đồ AI',          desc: 'Lộ trình AI cá nhân hóa',        time: '3 phút' },
+  { href: '/compass/matcher/',    icon: '🔍', name: 'Tìm Tool AI',        desc: 'Match tool với nhu cầu cụ thể',   time: '2 phút' },
+  { href: '/compass/calculator/', icon: '🧮', name: 'Máy Tính Chi Phí',  desc: 'Tính ngân sách AI thực tế',      time: '2 phút' },
+  { href: '/compass/automator/',  icon: '⚡', name: 'Tự Động Hóa',       desc: 'Tìm quy trình cần tự động',       time: '3 phút' },
+  { href: '/compass/report/',     icon: '📊', name: 'Báo Cáo AI',        desc: 'Tổng hợp kết quả của bạn',        time: '1 phút' },
+];
+---
+<BaseLayout title="Compass — Công Cụ AI Miễn Phí | BRIDGE" description="8 công cụ đánh giá AI giúp bạn hiểu vị trí, tiềm năng tiết kiệm, và lộ trình AI phù hợp nhất.">
+
+  <!-- Hero -->
+  <section style="padding:4rem 0 2.5rem;text-align:center;">
+    <div class="container">
+      <div class="badge" style="margin-bottom:1.25rem;">🧭 Bộ Công Cụ Miễn Phí</div>
+      <h1 style="margin-bottom:0.75rem;">
+        Compass <span class="gradient-text">AI</span>
+      </h1>
+      <p style="max-width:520px;margin-inline:auto;font-size:1.0625rem;">
+        8 công cụ giúp bạn hiểu vị trí hiện tại, ước tính tiết kiệm, và tìm lộ trình AI phù hợp — tất cả miễn phí.
+      </p>
+    </div>
+  </section>
+
+  <!-- Tools grid -->
+  <section style="padding:1.5rem 0 4rem;">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;max-width:960px;margin-inline:auto;">
+        {tools.map(t => (
+          <a href={t.href} class="card card-link" style="text-align:center;">
+            <div class="tool-icon">{t.icon}</div>
+            <div class="tool-name">{t.name}</div>
+            <div class="tool-desc" style="margin-bottom:0.75rem;">{t.desc}</div>
+            <div style="font-size:0.75rem;color:var(--color-accent);font-weight:500;">⏱ {t.time}</div>
+          </a>
+        ))}
+      </div>
+
+      <!-- Start CTA -->
+      <div style="text-align:center;margin-top:3rem;">
+        <p style="font-size:0.9375rem;margin-bottom:1.25rem;">Chưa biết bắt đầu từ đâu?</p>
+        <a href="/compass/quick/" class="btn btn-primary">🧭 Bắt Đầu Với Compass Nhanh</a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style is:global>
+  @media (max-width: 768px) {
+    [style*="grid-template-columns:repeat(4"] { grid-template-columns: repeat(2,1fr) !important; }
+  }
+  @media (max-width: 480px) {
+    [style*="grid-template-columns:repeat(4"] { grid-template-columns: 1fr !important; }
+  }
+</style>
