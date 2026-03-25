@@ -1,0 +1,98 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const tools = [
+  { id:'chatgpt',    name:'ChatGPT',       emoji:'🤖', best:'Writing, chat, coding, general tasks', price:'Free / $20', link:'https://chat.openai.com' },
+  { id:'gemini',     name:'Gemini',         emoji:'✨', best:'Research, Google Workspace, multimodal', price:'Free / $20', link:'https://gemini.google.com' },
+  { id:'claude',     name:'Claude',         emoji:'🧠', best:'Long documents, analysis, safe writing', price:'Free / $20', link:'https://claude.ai' },
+  { id:'midjourney', name:'Midjourney',     emoji:'🎨', best:'Image generation, design, art direction', price:'$10+', link:'https://midjourney.com' },
+  { id:'perplexity', name:'Perplexity',     emoji:'🔍', best:'Research with citations, real-time web', price:'Free / $20', link:'https://perplexity.ai' },
+  { id:'notion',     name:'Notion AI',      emoji:'📝', best:'Note-taking, docs, project management', price:'$10+', link:'https://notion.so' },
+  { id:'elevenlabs', name:'ElevenLabs',     emoji:'🎙️', best:'Text-to-speech, voice cloning, podcasts', price:'Free / $5+', link:'https://elevenlabs.io' },
+  { id:'runway',     name:'Runway',         emoji:'🎬', best:'AI video generation and editing', price:'$12+', link:'https://runwayml.com' },
+  { id:'zapier',     name:'Zapier',         emoji:'⚡', best:'Workflow automation, app integrations', price:'Free / $20+', link:'https://zapier.com' },
+  { id:'gamma',      name:'Gamma',          emoji:'📊', best:'Presentations and slides from text', price:'Free / $10', link:'https://gamma.app' },
+  { id:'heygen',     name:'HeyGen',         emoji:'🎥', best:'AI avatar videos, video translation', price:'$29+', link:'https://heygen.com' },
+  { id:'copy',       name:'Copy.ai',        emoji:'✍️', best:'Marketing copy, campaigns, email sequences', price:'Free / $36+', link:'https://copy.ai' },
+];
+
+const categories = [
+  { id:'all', label:'Tất cả' },
+  { id:'writing', label:'Viết lách' },
+  { id:'image', label:'Hình ảnh' },
+  { id:'video', label:'Video' },
+  { id:'automation', label:'Tự động hóa' },
+  { id:'research', label:'Nghiên cứu' },
+];
+---
+<BaseLayout title="Tìm Tool AI — Matcher | BRIDGE" description="Tìm công cụ AI phù hợp nhất với nhu cầu và ngân sách của bạn.">
+
+  <section style="padding:4rem 0 2rem;text-align:center;">
+    <div class="container" style="max-width:720px;">
+      <div class="badge" style="margin-bottom:1.25rem;">🔍 Tìm Tool AI · 2 phút</div>
+      <h1 style="margin-bottom:0.75rem;">Tìm <span class="gradient-text">Tool AI Phù Hợp</span></h1>
+      <p style="font-size:1.0625rem;max-width:560px;margin-inline:auto;">
+        Khám phá và so sánh các công cụ AI hàng đầu theo nhu cầu của bạn.
+      </p>
+    </div>
+  </section>
+
+  <section style="padding:1rem 0 5rem;">
+    <div class="container" style="max-width:960px;">
+
+      <!-- Search -->
+      <div style="margin-bottom:1.5rem;">
+        <input id="searchInput" type="text" placeholder="🔍 Tìm theo tên hoặc mục đích..." class="form-input" oninput="filterTools()" style="max-width:480px;" />
+      </div>
+
+      <!-- Tools grid -->
+      <div id="toolsGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+        {tools.map(t => (
+          <a href={t.link} target="_blank" rel="noopener" class="card card-link" data-name={t.name.toLowerCase()} data-best={t.best.toLowerCase()}>
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
+              <span style="font-size:1.75rem;">{t.emoji}</span>
+              <div>
+                <div style="font-weight:700;">{t.name}</div>
+                <div style="font-size:0.75rem;color:var(--color-accent);">{t.price}</div>
+              </div>
+            </div>
+            <div style="font-size:0.8125rem;color:var(--color-text-muted);">{t.best}</div>
+          </a>
+        ))}
+      </div>
+
+      <div style="text-align:center;margin-top:2.5rem;">
+        <p style="font-size:0.9rem;color:var(--color-text-muted);margin-bottom:1rem;">Chưa biết nên dùng cái nào?</p>
+        <a href="/compass/quick/" class="btn btn-primary">🧭 Dùng Compass Nhanh →</a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style is:global>
+  .form-group { margin-bottom:1.25rem; }
+  .form-label { display:block; font-size:0.875rem; font-weight:600; margin-bottom:0.5rem; color:var(--color-text-secondary); }
+  .form-input {
+    width:100%; padding:0.75rem 1rem;
+    background:var(--color-bg-elevated); border:1px solid var(--color-border);
+    border-radius:var(--radius-md); color:var(--color-text-primary);
+    font-size:1rem; outline:none; transition:border-color 0.15s;
+    box-sizing:border-box;
+  }
+  .form-input:focus { border-color:var(--color-accent); }
+  @media (max-width:640px) {
+    #toolsGrid { grid-template-columns:1fr !important; }
+  }
+</style>
+
+<script>
+  window.filterTools = function() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('#toolsGrid .card').forEach(card => {
+      const name = card.dataset.name || '';
+      const best = card.dataset.best || '';
+      card.style.display = (name.includes(q) || best.includes(q)) ? '' : 'none';
+    });
+  };
+</script>

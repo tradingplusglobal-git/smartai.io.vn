@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Tính ROI — Tiết Kiệm Bao Nhiêu Với AI | BRIDGE" description="Ước tính số giờ và tiền tiết kiệm được mỗi tuần khi dùng AI đúng cách.">
+
+  <section style="padding:4rem 0 2rem;text-align:center;">
+    <div class="container" style="max-width:720px;">
+      <div class="badge" style="margin-bottom:1.25rem;">📈 Tính ROI · 2 phút</div>
+      <h1 style="margin-bottom:0.75rem;">Tiết Kiệm <span class="gradient-text">Bao Nhiêu Với AI?</span></h1>
+      <p style="font-size:1.0625rem;max-width:560px;margin-inline:auto;">
+        Nhập thông tin công việc để ước tính số giờ và tiền tiết kiệm được mỗi tuần.
+      </p>
+    </div>
+  </section>
+
+  <section style="padding:1rem 0 5rem;">
+    <div class="container" style="max-width:640px;">
+      <div class="card" style="padding:2rem;">
+        <div class="form-group">
+          <label class="form-label">Số giờ làm việc/tuần</label>
+          <input id="hoursWeek" type="number" class="form-input" value="40" min="1" max="80" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Thu nhập theo giờ (USD)</label>
+          <input id="hourlyRate" type="number" class="form-input" value="15" min="1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bạn làm chủ yếu việc gì?</label>
+          <select id="workType" class="form-input">
+            <option value="content">Tạo nội dung (mạng xã hội, blog, email)</option>
+            <option value="documents">Xử lý tài liệu (báo cáo, hợp đồng)</option>
+            <option value="research">Nghiên cứu & phân tích dữ liệu</option>
+            <option value="customer">Chăm sóc khách hàng & support</option>
+            <option value="management">Quản lý dự án & đội nhóm</option>
+            <option value="sales">Bán hàng & marketing</option>
+          </select>
+        </div>
+        <button onclick="calculate()" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:0.5rem;">
+          📊 Tính Ngay
+        </button>
+
+        <div id="result" style="display:none;margin-top:1.75rem;">
+          <div style="height:1px;background:var(--color-border);margin-bottom:1.5rem;"></div>
+          <h3 style="margin-bottom:1rem;">Kết Quả Ước Tính</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;">
+            <div style="text-align:center;padding:1.25rem;background:var(--color-bg-elevated);border-radius:var(--radius-md);">
+              <div id="hoursSaved" style="font-size:2rem;font-weight:900;color:var(--color-accent-green);"></div>
+              <div style="font-size:0.8rem;color:var(--color-text-muted);margin-top:0.25rem;">Giờ tiết kiệm/tuần</div>
+            </div>
+            <div style="text-align:center;padding:1.25rem;background:var(--color-bg-elevated);border-radius:var(--radius-md);">
+              <div id="moneySaved" style="font-size:2rem;font-weight:900;color:var(--color-accent);"></div>
+              <div style="font-size:0.8rem;color:var(--color-text-muted);margin-top:0.25rem;">USD tiết kiệm/tháng</div>
+            </div>
+          </div>
+          <div id="roiNote" style="font-size:0.875rem;color:var(--color-text-secondary);padding:0.875rem;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius-md);margin-bottom:1.25rem;"></div>
+          <a href="/compass/quick/" class="btn btn-primary" style="width:100%;justify-content:center;">🧭 Tìm AI Phù Hợp →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style is:global>
+  .form-group { margin-bottom:1.25rem; }
+  .form-label { display:block; font-size:0.875rem; font-weight:600; margin-bottom:0.5rem; color:var(--color-text-secondary); }
+  .form-input {
+    width:100%; padding:0.75rem 1rem;
+    background:var(--color-bg-elevated); border:1px solid var(--color-border);
+    border-radius:var(--radius-md); color:var(--color-text-primary);
+    font-size:1rem; outline:none; transition:border-color 0.15s;
+    box-sizing:border-box;
+  }
+  .form-input:focus { border-color:var(--color-accent); }
+</style>
+
+<script>
+  const AI_SAVINGS = {
+    content:   { pct: 0.35, notes: 'AI giúp tạo draft nội dung nhanh 3-5x — tiết kiệm thời gian viết, research, và format.' },
+    documents: { pct: 0.30, notes: 'AI xử lý tài liệu, tóm tắt, và soạn thảo giúp bạn xử lý nhanh hơn 2-4x.' },
+    research:  { pct: 0.40, notes: 'AI tổng hợp và phân tích dữ liệu nhanh hơn tìm kiếm thủ công 5-10x.' },
+    customer:  { pct: 0.25, notes: 'AI draft câu trả lời, phân loại yêu cầu giúp tiết kiệm 20-30% thời gian xử lý.' },
+    management:{ pct: 0.20, notes: 'AI hỗ trợ viết reports, tóm tắt meetings và lên kế hoạch nhanh hơn 2x.' },
+    sales:     { pct: 0.30, notes: 'AI tạo copy, phân tích khách hàng và personalize messages hiệu quả hơn 3x.' },
+  };
+
+  window.calculate = function() {
+    const hours = parseFloat(document.getElementById('hoursWeek').value) || 40;
+    const rate = parseFloat(document.getElementById('hourlyRate').value) || 15;
+    const type = document.getElementById('workType').value;
+    const data = AI_SAVINGS[type];
+    const savedHours = (hours * data.pct).toFixed(1);
+    const savedMoney = Math.round(savedHours * rate * 4);
+    document.getElementById('hoursSaved').textContent = savedHours + 'h';
+    document.getElementById('moneySaved').textContent = '$' + savedMoney;
+    document.getElementById('roiNote').textContent = data.notes;
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('result').scrollIntoView({ behavior:'smooth', block:'nearest' });
+  };
+</script>

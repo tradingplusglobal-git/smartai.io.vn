@@ -1,0 +1,311 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Compass Nhanh — Tìm AI Phù Hợp | BRIDGE" description="Ba câu hỏi nhanh để khám phá bộ kỹ năng AI nào phù hợp với bạn. Chỉ 60 giây.">
+
+  <section style="padding:4rem 0 2rem;text-align:center;">
+    <div class="container" style="max-width:720px;">
+      <div class="badge" style="margin-bottom:1.25rem;">🧭 Compass Nhanh · 60 giây</div>
+      <h1 style="margin-bottom:0.75rem;">Tìm Kiếm <span class="gradient-text">AI Phù Hợp</span></h1>
+      <p style="font-size:1.0625rem;max-width:560px;margin-inline:auto;">
+        Ba câu hỏi nhanh để khám phá công cụ AI nào phù hợp với nhu cầu của bạn.
+      </p>
+    </div>
+  </section>
+
+  <section style="padding:1rem 0 5rem;">
+    <div class="container" style="max-width:680px;">
+      <div class="card" id="quickCompass" style="padding:2rem;">
+        <!-- Progress bar -->
+        <div style="height:6px;background:var(--color-bg-elevated);border-radius:99px;margin-bottom:0.75rem;overflow:hidden;">
+          <div id="progressFill" style="height:100%;background:linear-gradient(90deg,var(--color-accent),var(--color-accent-green));border-radius:99px;width:33%;transition:width 0.4s;"></div>
+        </div>
+        <div id="stepCounter" style="font-size:0.75rem;color:var(--color-text-muted);font-family:monospace;margin-bottom:1.5rem;">1 / 3</div>
+        <div id="wizardBody"></div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style is:global>
+  .q-option {
+    display:flex; align-items:center; gap:0.75rem;
+    padding:0.875rem 1rem;
+    background:var(--color-bg-elevated);
+    border:1px solid var(--color-border);
+    border-radius:var(--radius-md);
+    cursor:pointer;
+    transition:border-color 0.15s, background 0.15s;
+    margin-bottom:0.625rem;
+    font-size:0.9375rem;
+    user-select:none;
+  }
+  .q-option:hover { border-color:var(--color-border-hover); background:var(--color-bg-card); }
+  .q-option.selected { border-color:var(--color-accent); background:rgba(245,158,11,0.08); }
+
+  .ai-level-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:0.75rem; margin-bottom:1.5rem; }
+  .ai-level-card {
+    padding:1rem; border:1px solid var(--color-border);
+    border-radius:var(--radius-md); cursor:pointer;
+    transition:border-color 0.15s, background 0.15s; text-align:center;
+  }
+  .ai-level-card:hover { border-color:var(--color-border-hover); }
+  .ai-level-card.selected { border-color:var(--color-accent); background:rgba(245,158,11,0.08); }
+  .ai-level-emoji { font-size:1.75rem; margin-bottom:0.375rem; }
+  .ai-level-label { font-weight:600; font-size:0.875rem; }
+  .ai-level-desc { font-size:0.75rem; color:var(--color-text-muted); margin-top:0.125rem; }
+
+  .result-card {
+    border:1px solid var(--color-border);
+    border-radius:var(--radius-lg); padding:1.5rem;
+    background:var(--color-bg-elevated);
+    margin-bottom:1rem;
+  }
+  .wizard-nav { display:flex; justify-content:space-between; align-items:center; margin-top:1.5rem; }
+  .step-title { font-size:1.125rem; font-weight:700; margin-bottom:0.25rem; }
+  .step-subtitle { font-size:0.875rem; color:var(--color-text-muted); margin-bottom:1.25rem; }
+  .email-input {
+    width:100%; padding:0.875rem 1rem;
+    background:var(--color-bg-elevated); border:1px solid var(--color-border);
+    border-radius:var(--radius-md); color:var(--color-text-primary);
+    font-size:1rem; outline:none; transition:border-color 0.15s;
+    box-sizing:border-box; margin-bottom:0.625rem;
+  }
+  .email-input:focus { border-color:var(--color-accent); }
+  .benefit-item { display:flex; align-items:center; gap:0.5rem; font-size:0.8125rem; color:var(--color-text-secondary); margin-bottom:0.375rem; }
+</style>
+
+<script>
+  window.BRIDGE_GFORM = {
+    action: 'https://docs.google.com/forms/d/e/1FAIpQLSesYGPJVHYZkwUjFO-EoMBMwxCf3m_TmsLCE6xv-8Yotro_Sg/formResponse',
+    fields: {
+      email:   'entry.804251629',
+      source:  'entry.1243593241',
+      needs:   'entry.1647643197',
+      pains:   'entry.238138937',
+      aiLevel: 'entry.291060052',
+      product: 'entry.733535148',
+      match:   'entry.1867202396',
+      lang:    'entry.435552750',
+      data:    'entry.951333008',
+    }
+  };
+  window.BRIDGE_WORKER = 'https://compass-data.smartai1.workers.dev';
+
+  const D = {
+    contentTypes: [
+      { id:'content',     emoji:'📱', label:'Tạo nội dung (mạng xã hội, blog, email, quảng cáo)' },
+      { id:'creator',     emoji:'🎬', label:'Xây dựng thương hiệu cá nhân (YouTube, podcast, khóa học)' },
+      { id:'documents',   emoji:'📄', label:'Xử lý tài liệu & dữ liệu (hợp đồng, báo cáo)' },
+      { id:'automation',  emoji:'🤖', label:'Tự động hóa quy trình & bot (chatbot, pipeline)' },
+      { id:'ecommerce',   emoji:'🛒', label:'Bán hàng online (sàn TMĐT, cửa hàng, listing)' },
+      { id:'education',   emoji:'🎓', label:'Dạy học hoặc đào tạo (khóa học, giáo trình, LMS)' },
+      { id:'business',    emoji:'💼', label:'Quản lý đội nhóm hoặc doanh nghiệp (HR, tài chính)' },
+      { id:'development', emoji:'💻', label:'Phát triển phần mềm (code, deploy, DevOps)' },
+    ],
+    painPoints: [
+      { id:'scratch',   emoji:'✍️', label:'Bắt đầu từ đầu mất quá lâu' },
+      { id:'ideas',     emoji:'💡', label:'Hết ý tưởng / công việc lặp lại' },
+      { id:'platforms', emoji:'📱', label:'Phải làm cho nhiều nền tảng' },
+      { id:'research',  emoji:'🔍', label:'Nghiên cứu & phân tích tốn thời gian' },
+      { id:'quality',   emoji:'🔄', label:'Chất lượng không nhất quán / thiếu quy trình' },
+      { id:'cost',      emoji:'💸', label:'Công cụ AI quá đắt hoặc phức tạp' },
+    ],
+    aiLevels: [
+      { id:'never',     emoji:'🌱', label:'Chưa dùng bao giờ',         desc:'Hoàn toàn mới với AI' },
+      { id:'tried',     emoji:'🌿', label:'Đã thử nhưng chưa gắn bó', desc:'Dùng ChatGPT vài lần' },
+      { id:'sometimes', emoji:'🌳', label:'Dùng thỉnh thoảng',         desc:'Cho một số công việc cụ thể' },
+      { id:'daily',     emoji:'🚀', label:'Dùng hàng ngày',            desc:'Là phần quen thuộc trong công việc' },
+    ],
+    products: {
+      content:     { name:'ContentBridge Creator',  saves:'8–12', price:'$19/tháng' },
+      creator:     { name:'ContentBridge Creator',  saves:'10–15', price:'$19/tháng' },
+      documents:   { name:'DocBridge',              saves:'6–10', price:'Sắp ra mắt' },
+      automation:  { name:'ContentBridge Agency',   saves:'12–18', price:'$49/tháng' },
+      ecommerce:   { name:'ContentBridge Affiliate',saves:'8–12', price:'$19/tháng' },
+      education:   { name:'ContentBridge Creator',  saves:'10–14', price:'$19/tháng' },
+      business:    { name:'ContentBridge Business', saves:'12–20', price:'$49/tháng' },
+      development: { name:'ContentBridge Business', saves:'8–15', price:'$49/tháng' },
+    }
+  };
+
+  let step = 1, selections = {}, email = '';
+  const body = document.getElementById('wizardBody');
+  const progress = document.getElementById('progressFill');
+  const counter = document.getElementById('stepCounter');
+  const totalSteps = 4;
+
+  function updateProgress() {
+    progress.style.width = ((step / totalSteps) * 100) + '%';
+    counter.textContent = Math.min(step, 3) + ' / 3';
+  }
+
+  function renderStep() {
+    updateProgress();
+    if (step === 1) renderQ1();
+    else if (step === 2) renderQ2();
+    else if (step === 3) renderQ3();
+    else renderEmail();
+  }
+
+  function multiSelect(key, items) {
+    selections[key] = selections[key] || [];
+    return items.map(item => {
+      const sel = selections[key].includes(item.id);
+      return `<div class="q-option${sel?' selected':''}" data-key="${key}" data-id="${item.id}">
+        <span>${item.emoji}</span><span>${item.label}</span>
+      </div>`;
+    }).join('');
+  }
+
+  function renderQ1() {
+    body.innerHTML = `
+      <div class="step-title">Bạn dành nhiều thời gian nhất cho việc gì?</div>
+      <div class="step-subtitle">Chọn tất cả phù hợp</div>
+      ${multiSelect('needs', D.contentTypes)}
+      <div class="wizard-nav">
+        <span></span>
+        <button onclick="nextStep()" class="btn btn-primary">Tiếp Theo →</button>
+      </div>`;
+    bindMultiSelect();
+  }
+
+  function renderQ2() {
+    body.innerHTML = `
+      <div class="step-title">Thách thức lớn nhất của bạn là gì?</div>
+      <div class="step-subtitle">Chọn tất cả phù hợp</div>
+      ${multiSelect('pains', D.painPoints)}
+      <div class="wizard-nav">
+        <button onclick="prevStep()" class="btn btn-secondary">← Quay lại</button>
+        <button onclick="nextStep()" class="btn btn-primary">Tiếp Theo →</button>
+      </div>`;
+    bindMultiSelect();
+  }
+
+  function renderQ3() {
+    body.innerHTML = `
+      <div class="step-title">Mức độ sử dụng AI của bạn?</div>
+      <div class="step-subtitle">Trả lời thật — giúp chúng tôi đề xuất đúng điểm bắt đầu</div>
+      <div class="ai-level-grid">
+        ${D.aiLevels.map(l => `
+          <div class="ai-level-card${selections.aiLevel===l.id?' selected':''}" onclick="selectLevel('${l.id}')">
+            <div class="ai-level-emoji">${l.emoji}</div>
+            <div class="ai-level-label">${l.label}</div>
+            <div class="ai-level-desc">${l.desc}</div>
+          </div>`).join('')}
+      </div>
+      <div class="wizard-nav">
+        <button onclick="prevStep()" class="btn btn-secondary">← Quay lại</button>
+        <button onclick="nextStep()" class="btn btn-primary">Xem Đề Xuất →</button>
+      </div>`;
+  }
+
+  function renderEmail() {
+    body.innerHTML = `
+      <div class="step-title">📬 Gửi kết quả tới đâu?</div>
+      <div class="step-subtitle">Nhập email để xem đề xuất AI + nhận Founders Toolkit miễn phí</div>
+      <input id="emailInput" class="email-input" type="email" placeholder="email@cua-ban.com" />
+      <div style="margin-bottom:1.25rem;">
+        <div class="benefit-item">✅ Đề xuất AI cá nhân hóa cho bạn</div>
+        <div class="benefit-item">🎁 Founders Toolkit miễn phí (3 kỹ năng AI)</div>
+        <div class="benefit-item">💡 Mẹo AI hàng tuần (hủy đăng ký bất cứ lúc nào)</div>
+      </div>
+      <div class="wizard-nav">
+        <button onclick="prevStep()" class="btn btn-secondary">← Quay lại</button>
+        <button onclick="submitForm()" class="btn btn-primary">Xem Kết Quả →</button>
+      </div>
+      <p style="font-size:0.75rem;color:var(--color-text-muted);margin-top:0.75rem;text-align:center;">
+        🔒 Không spam. Hủy đăng ký bất cứ lúc nào.
+      </p>`;
+  }
+
+  function renderResult() {
+    const topNeed = (selections.needs||[])[0] || 'content';
+    const product = D.products[topNeed] || D.products.content;
+    counter.textContent = '✓ Hoàn thành';
+    progress.style.width = '100%';
+    body.innerHTML = `
+      <div style="text-align:center;margin-bottom:1.5rem;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">🎯</div>
+        <h2 style="font-size:1.25rem;margin-bottom:0.25rem;">Kết Quả AI Phù Hợp</h2>
+        <p style="font-size:0.875rem;color:var(--color-text-muted);">Dựa trên câu trả lời của bạn</p>
+      </div>
+      <div class="result-card">
+        <div style="font-size:0.75rem;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;">Sản phẩm BRIDGE phù hợp nhất</div>
+        <div style="font-size:1.125rem;font-weight:700;margin-bottom:1rem;">✍️ ${product.name}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+          <div style="font-size:0.8125rem;">
+            <div style="color:var(--color-text-muted);margin-bottom:0.25rem;">Tiết kiệm ước tính</div>
+            <div style="font-weight:700;color:var(--color-accent-green);">${product.saves} giờ/tuần</div>
+          </div>
+          <div style="font-size:0.8125rem;">
+            <div style="color:var(--color-text-muted);margin-bottom:0.25rem;">Bắt đầu từ</div>
+            <div style="font-weight:700;color:var(--color-accent);">${product.price}</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <a href="/compass/" class="btn btn-secondary" style="flex:1;">Compass Đầy Đủ →</a>
+        <a href="/" class="btn btn-primary" style="flex:1;">Xem Sản Phẩm →</a>
+      </div>`;
+  }
+
+  function bindMultiSelect() {
+    document.querySelectorAll('.q-option').forEach(el => {
+      el.addEventListener('click', () => {
+        const key = el.dataset.key, id = el.dataset.id;
+        selections[key] = selections[key] || [];
+        if (selections[key].includes(id)) {
+          selections[key] = selections[key].filter(x => x !== id);
+          el.classList.remove('selected');
+        } else {
+          selections[key].push(id);
+          el.classList.add('selected');
+        }
+      });
+    });
+  }
+
+  window.selectLevel = function(id) {
+    selections.aiLevel = id;
+    document.querySelectorAll('.ai-level-card').forEach(c => c.classList.remove('selected'));
+    event.currentTarget.classList.add('selected');
+  };
+
+  window.nextStep = function() { step++; renderStep(); };
+  window.prevStep = function() { step--; renderStep(); };
+
+  window.submitForm = async function() {
+    const emailEl = document.getElementById('emailInput');
+    const val = emailEl?.value?.trim();
+    if (!val || !val.includes('@')) { emailEl.style.borderColor='#ef4444'; return; }
+    email = val;
+
+    // Submit to Google Forms (non-blocking)
+    const gf = window.BRIDGE_GFORM;
+    if (gf?.action) {
+      const fd = new FormData();
+      fd.append(gf.fields.email, email);
+      fd.append(gf.fields.source, 'compass-quick');
+      fd.append(gf.fields.needs, (selections.needs||[]).join(','));
+      fd.append(gf.fields.pains, (selections.pains||[]).join(','));
+      fd.append(gf.fields.aiLevel, selections.aiLevel||'');
+      fd.append(gf.fields.lang, 'vi');
+      fd.append(gf.fields.data, JSON.stringify(selections));
+      fetch(gf.action, { method:'POST', body:fd, mode:'no-cors' }).catch(()=>{});
+    }
+
+    // Submit to CF Worker (non-blocking)
+    if (window.BRIDGE_WORKER) {
+      fetch(window.BRIDGE_WORKER, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ email, source:'compass-quick', data:selections, lang:'vi' })
+      }).catch(()=>{});
+    }
+
+    renderResult();
+  };
+
+  renderStep();
+</script>

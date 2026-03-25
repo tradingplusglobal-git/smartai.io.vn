@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Đánh Giá Sẵn Sàng AI | BRIDGE" description="Đo mức độ sẵn sàng ứng dụng AI của bạn hoặc doanh nghiệp — 5 câu hỏi, kết quả ngay.">
+
+  <section style="padding:4rem 0 2rem;text-align:center;">
+    <div class="container" style="max-width:720px;">
+      <div class="badge" style="margin-bottom:1.25rem;">🎯 Đánh Giá Sẵn Sàng · 3 phút</div>
+      <h1 style="margin-bottom:0.75rem;">Bạn Đã Sẵn Sàng <span class="gradient-text">Dùng AI Chưa?</span></h1>
+      <p style="font-size:1.0625rem;max-width:560px;margin-inline:auto;">
+        5 câu hỏi đánh giá mức độ sẵn sàng AI — cá nhân hoặc doanh nghiệp.
+      </p>
+    </div>
+  </section>
+
+  <section style="padding:1rem 0 5rem;">
+    <div class="container" style="max-width:640px;">
+      <div class="card" id="readinessCard" style="padding:2rem;">
+        <div style="height:6px;background:var(--color-bg-elevated);border-radius:99px;margin-bottom:0.75rem;overflow:hidden;">
+          <div id="rProgress" style="height:100%;background:linear-gradient(90deg,var(--color-accent),var(--color-accent-green));border-radius:99px;width:20%;transition:width 0.4s;"></div>
+        </div>
+        <div id="rCounter" style="font-size:0.75rem;color:var(--color-text-muted);font-family:monospace;margin-bottom:1.5rem;">1 / 5</div>
+        <div id="rBody"></div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script>
+  const questions = [
+    { q: 'Bạn đang dùng công cụ AI nào?', options: [
+      { label:'Chưa dùng gì cả', score:0 },
+      { label:'ChatGPT thi thoảng', score:1 },
+      { label:'Nhiều công cụ AI khác nhau', score:2 },
+      { label:'Có quy trình AI rõ ràng', score:3 },
+    ]},
+    { q: 'Quy trình làm việc hiện tại của bạn thế nào?', options: [
+      { label:'Hoàn toàn thủ công', score:0 },
+      { label:'Có template nhưng chưa có AI', score:1 },
+      { label:'Bắt đầu tự động hóa một số bước', score:2 },
+      { label:'Pipeline khá tự động, cần AI để scale', score:3 },
+    ]},
+    { q: 'Ngân sách cho công cụ AI mỗi tháng?', options: [
+      { label:'$0 — chưa sẵn sàng chi', score:0 },
+      { label:'$1–$20 — dùng miễn phí hoặc rất ít', score:1 },
+      { label:'$20–$100 — đang cân nhắc', score:2 },
+      { label:'$100+ — sẵn sàng đầu tư', score:3 },
+    ]},
+    { q: 'Bạn cảm thấy thế nào về việc học công cụ mới?', options: [
+      { label:'Ngại — muốn đơn giản nhất có thể', score:0 },
+      { label:'Cần thời gian — ổn nếu có hỗ trợ', score:1 },
+      { label:'Thích học — sẵn sàng thử', score:2 },
+      { label:'Early adopter — luôn thử cái mới', score:3 },
+    ]},
+    { q: 'Mục tiêu chính khi dùng AI?', options: [
+      { label:'Chưa rõ — đang khám phá', score:0 },
+      { label:'Tiết kiệm thời gian một số việc cụ thể', score:1 },
+      { label:'Tăng chất lượng output đáng kể', score:2 },
+      { label:'Scale hoạt động mà không tăng nhân sự', score:3 },
+    ]},
+  ];
+
+  let current = 0, scores = [];
+  const body = document.getElementById('rBody');
+  const progress = document.getElementById('rProgress');
+  const counter = document.getElementById('rCounter');
+
+  function render() {
+    if (current >= questions.length) { showResult(); return; }
+    progress.style.width = ((current + 1) / questions.length * 100) + '%';
+    counter.textContent = (current + 1) + ' / ' + questions.length;
+    const q = questions[current];
+    body.innerHTML = `
+      <div style="font-size:1.0625rem;font-weight:700;margin-bottom:1.25rem;">${q.q}</div>
+      ${q.options.map((o,i) => `
+        <div class="q-option" onclick="answer(${o.score})" style="cursor:pointer;">
+          <span style="width:1.5rem;height:1.5rem;border-radius:50%;border:2px solid var(--color-border);display:inline-flex;align-items:center;justify-content:center;font-size:0.75rem;flex-shrink:0;">${['A','B','C','D'][i]}</span>
+          <span>${o.label}</span>
+        </div>`).join('')}`;
+  }
+
+  window.answer = function(score) {
+    scores.push(score);
+    current++;
+    render();
+  };
+
+  function showResult() {
+    const total = scores.reduce((a,b)=>a+b,0);
+    const max = questions.length * 3;
+    const pct = Math.round(total / max * 100);
+    let level, color, advice, next;
+    if (pct < 25) {
+      level = '🌱 Giai đoạn khám phá'; color = 'var(--color-accent-2)';
+      advice = 'Bạn đang ở giai đoạn đầu — đây là thời điểm hoàn hảo để bắt đầu với các công cụ AI miễn phí và xây dựng thói quen.';
+      next = 'Bắt đầu với Compass Nhanh để tìm AI phù hợp nhất với công việc hiện tại.';
+    } else if (pct < 55) {
+      level = '🌿 Sẵn sàng bắt đầu'; color = 'var(--color-accent)';
+      advice = 'Bạn đã có nền tảng tốt. Cần một lộ trình rõ ràng để tích hợp AI có cấu trúc hơn.';
+      next = 'Dùng Bản Đồ AI để lên lộ trình 90 ngày phù hợp.';
+    } else if (pct < 80) {
+      level = '🌳 Người dùng AI trung cấp'; color = 'var(--color-accent-green)';
+      advice = 'Bạn đang dùng AI hiệu quả — tiếp theo là scale lên, tự động hóa nhiều hơn và giảm chi phí.';
+      next = 'Xem ContentBridge để có bộ kỹ năng AI có cấu trúc cho công việc của bạn.';
+    } else {
+      level = '🚀 AI Power User'; color = 'var(--color-accent-green)';
+      advice = 'Bạn đã sẵn sàng tối đa. Bước tiếp theo là tích hợp AI toàn diện vào mọi quy trình và xây team AI.';
+      next = 'Liên hệ BRIDGE để thiết kế giải pháp AI doanh nghiệp phù hợp.';
+    }
+    counter.textContent = '✓ Hoàn thành';
+    progress.style.width = '100%';
+    body.innerHTML = `
+      <div style="text-align:center;margin-bottom:1.5rem;">
+        <div style="font-size:3rem;font-weight:900;color:${color};margin-bottom:0.25rem;">${pct}%</div>
+        <div style="font-size:1rem;font-weight:700;">${level}</div>
+      </div>
+      <div style="padding:1rem;background:var(--color-bg-elevated);border-radius:var(--radius-md);margin-bottom:1rem;font-size:0.9rem;">
+        ${advice}
+      </div>
+      <div style="padding:0.875rem;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius-md);margin-bottom:1.5rem;font-size:0.875rem;color:var(--color-text-secondary);">
+        💡 <strong>Bước tiếp theo:</strong> ${next}
+      </div>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <a href="/compass/quick/" class="btn btn-primary" style="flex:1;justify-content:center;">Tìm AI Phù Hợp →</a>
+        <a href="/compass/" class="btn btn-secondary" style="flex:1;justify-content:center;">Công Cụ Khác</a>
+      </div>`;
+  }
+
+  render();
+</script>
